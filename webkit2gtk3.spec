@@ -1,7 +1,4 @@
 #Global macro or variable
-%global add_to_license_files() \
-        mkdir -p _license_files ; \
-        cp -p %1 _license_files/$(echo '%1' | sed -e 's!/!.!g')
 %global __provides_exclude_from ^%{_libdir}/webkit2gtk-4\\.0/.*\\.so$
 # increase the DIE limit use linker flags to reduce memory consumption
 # https://bugzilla.redhat.com/show_bug.cgi?id=1456261
@@ -14,7 +11,7 @@ Name:           webkit2gtk3
 Version:        2.22.2
 Release:        1
 Summary:        GTK+ Web content engine library
-License:        LGPLv2
+License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
 URL:            http://www.webkitgtk.org/
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
@@ -134,29 +131,16 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 #Files list
 # Finally, copy over and rename various files for %%license inclusion
-%add_to_license_files Source/JavaScriptCore/COPYING.LIB
-%add_to_license_files Source/JavaScriptCore/icu/LICENSE
-%add_to_license_files Source/ThirdParty/ANGLE/LICENSE
-%add_to_license_files Source/ThirdParty/ANGLE/src/common/third_party/smhasher/LICENSE
-%add_to_license_files Source/ThirdParty/ANGLE/src/third_party/compiler/LICENSE
-%add_to_license_files Source/ThirdParty/ANGLE/src/third_party/libXNVCtrl/LICENSE
-%add_to_license_files Source/WebCore/icu/LICENSE
-%add_to_license_files Source/WebCore/LICENSE-APPLE
-%add_to_license_files Source/WebCore/LICENSE-LGPL-2
-%add_to_license_files Source/WebCore/LICENSE-LGPL-2.1
-%add_to_license_files Source/WebInspectorUI/UserInterface/External/CodeMirror/LICENSE
-%add_to_license_files Source/WebInspectorUI/UserInterface/External/ESLint/LICENSE
-%add_to_license_files Source/WebInspectorUI/UserInterface/External/Esprima/LICENSE
-%add_to_license_files Source/WebInspectorUI/UserInterface/External/three.js/LICENSE
-%add_to_license_files Source/WTF/icu/LICENSE
-%add_to_license_files Source/WTF/wtf/dtoa/COPYING
-%add_to_license_files Source/WTF/wtf/dtoa/LICENSE
+mkdir -p temp_copyrights
+for f in $(find Source -regex ".*\(LICENSE\|COPYING\).*" | grep -v test);do
+    cp -a $f temp_copyrights/${f//\//.}
+done
 
 %files -f WebKit2GTK-4.0.lang
-%license _license_files/*ThirdParty*
-%license _license_files/*WebCore*
-%license _license_files/*WebInspectorUI*
-%license _license_files/*WTF*
+%license temp_copyrights/*ThirdParty*
+%license temp_copyrights/*WebCore*
+%license temp_copyrights/*WebInspectorUI*
+%license temp_copyrights/*WTF*
 %{_libdir}/libwebkit2gtk-4.0.so.*
 %dir %{_libdir}/girepository-1.0
 %{_libdir}/girepository-1.0/WebKit2-4.0.typelib
@@ -178,7 +162,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 %{_datadir}/gir-1.0/WebKit2WebExtension-4.0.gir
 
 %files jsc
-%license _license_files/*JavaScriptCore*
+%license temp_copyrights/*JavaScriptCore*
 %{_libdir}/libjavascriptcoregtk-4.0.so.*
 %dir %{_libdir}/girepository-1.0
 %{_libdir}/girepository-1.0/JavaScriptCore-4.0.typelib
