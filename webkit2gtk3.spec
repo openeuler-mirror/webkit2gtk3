@@ -9,7 +9,7 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.22.2
-Release:        3
+Release:        4
 Summary:        GTK+ Web content engine library
 License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
 URL:            http://www.webkitgtk.org/
@@ -17,9 +17,6 @@ Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
 # https://bugs.webkit.org/show_bug.cgi?id=162611
 Patch0:     user-agent-branding.patch
-# https://fedoraproject.org/wiki/Packaging:CryptoPolicies
-# https://bugs.webkit.org/show_bug.cgi?id=158785
-Patch1:     fedora-crypto-policy.patch
 # https://bugs.webkit.org/show_bug.cgi?id=132333
 Patch2:     cloop-big-endians.patch
 # Explicitly specify python2 over python
@@ -185,6 +182,12 @@ done
 
 
 %changelog
+* Sat Jan 11 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.22.2-4
+- Type:enhancement
+- Id:NA
+- SUG:NA
+- DESC:optimization the spec
+
 * Tue Dec 31 2019 openEuler Buildteam <buildteam@openeuler.org> - 2.22.2-3
 - Enable gtk-doc and go-introspection
 
