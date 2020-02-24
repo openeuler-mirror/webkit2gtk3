@@ -9,7 +9,7 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.22.2
-Release:        5
+Release:        6
 Summary:        GTK+ Web content engine library
 License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
 URL:            http://www.webkitgtk.org/
@@ -21,10 +21,11 @@ Patch0:     user-agent-branding.patch
 Patch2:     cloop-big-endians.patch
 # Explicitly specify python2 over python
 Patch3:     python2.patch
+Patch4:     webkit-aarch64_page_size.patch
 
 #Dependency
 BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant-devel
-BuildRequires:  flex fontconfig-devel freetype-devel
+BuildRequires:  flex fontconfig-devel freetype-devel ninja-build
 BuildRequires:  git geoclue2-devel gettext gcc-c++ glib2-devel gnutls-devel
 BuildRequires:  gobject-introspection-devel gperf
 BuildRequires:  gstreamer1-devel gstreamer1-plugins-base-devel
@@ -112,18 +113,23 @@ rm -rf Source/ThirdParty/qunit/
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
 %cmake \
+  -GNinja \
   -DPORT=GTK \
   -DCMAKE_BUILD_TYPE=Release \
-  -DENABLE_GTKDOC=OFF \
-  -DENABLE_INTROSPECTION=OFF \
+  -DENABLE_GTKDOC=ON \
   -DENABLE_MINIBROWSER=ON \
+%ifarch s390x %{power64} aarch64
+  -DENABLE_JIT=OFF \
+  -DUSE_SYSTEM_MALLOC=ON \
+%endif
   ..
 popd
 
-make %{?_smp_mflags} -C %{_target_platform}
+export NINJA_STATUS="[%f/%t][%e] "
+%ninja_build -C %{_target_platform}
 
 %install
-%make_install -C %{_target_platform}
+%ninja_install -C %{_target_platform}
 
 %find_lang WebKit2GTK-4.0
 
@@ -140,6 +146,9 @@ done
 %license temp_copyrights/*WebInspectorUI*
 %license temp_copyrights/*WTF*
 %{_libdir}/libwebkit2gtk-4.0.so.*
+%dir %{_libdir}/girepository-1.0
+%{_libdir}/girepository-1.0/WebKit2-4.0.typelib
+%{_libdir}/girepository-1.0/WebKit2WebExtension-4.0.typelib
 %{_libdir}/webkit2gtk-4.0/
 %{_libexecdir}/webkit2gtk-4.0/
 %exclude %{_libexecdir}/webkit2gtk-4.0/MiniBrowser
@@ -152,10 +161,15 @@ done
 %{_libdir}/libwebkit2gtk-4.0.so
 %{_libdir}/pkgconfig/webkit2gtk-4.0.pc
 %{_libdir}/pkgconfig/webkit2gtk-web-extension-4.0.pc
+%dir %{_datadir}/gir-1.0
+%{_datadir}/gir-1.0/WebKit2-4.0.gir
+%{_datadir}/gir-1.0/WebKit2WebExtension-4.0.gir
 
 %files jsc
 %license temp_copyrights/*JavaScriptCore*
 %{_libdir}/libjavascriptcoregtk-4.0.so.*
+%dir %{_libdir}/girepository-1.0
+%{_libdir}/girepository-1.0/JavaScriptCore-4.0.typelib
 
 %files jsc-devel
 %{_libexecdir}/webkit2gtk-4.0/jsc
@@ -163,8 +177,23 @@ done
 %{_includedir}/webkitgtk-4.0/JavaScriptCore/
 %{_libdir}/libjavascriptcoregtk-4.0.so
 %{_libdir}/pkgconfig/javascriptcoregtk-4.0.pc
+%dir %{_datadir}/gir-1.0
+%{_datadir}/gir-1.0/JavaScriptCore-4.0.gir
+
+%files help
+%dir %{_datadir}/gtk-doc
+%dir %{_datadir}/gtk-doc/html
+%{_datadir}/gtk-doc/html/jsc-glib-4.0/
+%{_datadir}/gtk-doc/html/webkit2gtk-4.0/
+%{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Mon Feb 24 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.22.2-6
+- Type:enhancement
+- Id:NA
+- SUG:NA
+- DESC:fix rpmbuild fail in make
+
 * Thu Jan 23 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.22.2-5
 - Type:enhancement
 - Id:NA
