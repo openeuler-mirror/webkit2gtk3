@@ -1,45 +1,35 @@
-#Global macro or variable
 %global __provides_exclude_from ^%{_libdir}/webkit2gtk-4\\.0/.*\\.so$
-# increase the DIE limit use linker flags to reduce memory consumption
-# https://bugzilla.redhat.com/show_bug.cgi?id=1456261
 %global _dwz_max_die_limit 250000000
 %global _dwz_max_die_limit_x86_64 250000000
-%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 
 #Basic Information
 Name:           webkit2gtk3
-Version:        2.22.2
-Release:        6
+Version:        2.28.3
+Release:        1
 Summary:        GTK+ Web content engine library
 License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
 URL:            http://www.webkitgtk.org/
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
-# https://bugs.webkit.org/show_bug.cgi?id=162611
-Patch0:     user-agent-branding.patch
-# https://bugs.webkit.org/show_bug.cgi?id=132333
-Patch2:     cloop-big-endians.patch
-# Explicitly specify python2 over python
-Patch3:     python2.patch
-Patch4:     webkit-aarch64_page_size.patch
+Patch0:         user-agent-branding.patch
 
 #Dependency
-BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant-devel
+BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant2-devel
 BuildRequires:  flex fontconfig-devel freetype-devel ninja-build
 BuildRequires:  git geoclue2-devel gettext gcc-c++ glib2-devel gnutls-devel
-BuildRequires:  gobject-introspection-devel gperf
-BuildRequires:  gstreamer1-devel gstreamer1-plugins-base-devel
-BuildRequires:  gstreamer1-plugins-bad-free-devel
-BuildRequires:  gtk2-devel gtk3-devel gtk-doc
-BuildRequires:  harfbuzz-devel hyphen-devel
+BuildRequires:  gobject-introspection-devel gperf gnupg2 wpebackend-fdo-devel
+BuildRequires:  gstreamer1-devel gstreamer1-plugins-base-devel rubygem-json
+BuildRequires:  gstreamer1-plugins-bad-free-devel libwpe-devel libseccomp-devel
+BuildRequires:  gtk2-devel gtk3-devel gtk-doc geoclue2-devel libjpeg-turbo-devel
+BuildRequires:  harfbuzz-devel hyphen-devel bubblewrap xdg-dbus-proxy
 BuildRequires:  libatomic libicu-devel libjpeg-devel libnotify-devel
 BuildRequires:  libpng-devel libsecret-devel libsoup-devel libwebp-devel
 BuildRequires:  libxslt-devel libXt-devel libwayland-client-devel
-BuildRequires:  libwayland-egl-devel libwayland-server-devel
+BuildRequires:  libwayland-egl-devel libwayland-server-devel openjpeg2-devel
 BuildRequires:  mesa-libEGL-devel mesa-libGL-devel mesa-libGLES-devel
 BuildRequires:  pcre-devel perl-File-Copy-Recursive perl-JSON-PP perl-Switch
-BuildRequires:  python2 ruby rubygems sqlite-devel upower-devel woff2-devel
-Requires:       geoclue2
+BuildRequires:  python3 ruby rubygems sqlite-devel upower-devel woff2-devel
+Requires:       geoclue2 bubblewrap xdg-dbus-proxy  xdg-desktop-portal-gtk
 Requires:       webkit2gtk3-jsc = %{version}-%{release}
 
 Provides:       bundled(angle)
@@ -103,7 +93,7 @@ files for developing applications that use JavaScript engine from webkit2gtk3.
 
 #Build sections
 %prep
-%autosetup -p1 -n webkitgtk-%{version} -S git
+%autosetup -p1 -n webkitgtk-%{version}
 
 # rm bundled libraries
 rm -rf Source/ThirdParty/gtest/
@@ -118,10 +108,7 @@ pushd %{_target_platform}
   -DCMAKE_BUILD_TYPE=Release \
   -DENABLE_GTKDOC=ON \
   -DENABLE_MINIBROWSER=ON \
-%ifarch s390x %{power64} aarch64
-  -DENABLE_JIT=OFF \
-  -DUSE_SYSTEM_MALLOC=ON \
-%endif
+  -DPYTHON_EXECUTABLE=%{_bindir}/python3 \
   ..
 popd
 
@@ -188,6 +175,12 @@ done
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Thu Jul 23 2020 songnannan <songnannan2@huawei.com> - 2.28.3-1
+- Type:enhancement
+- Id:NA
+- SUG:NA
+- DESC: update to  2.28.3
+
 * Mon Feb 24 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.22.2-6
 - Type:enhancement
 - Id:NA
