@@ -5,7 +5,7 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.28.3
-Release:        1
+Release:        2
 Summary:        GTK+ Web content engine library
 License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
 URL:            http://www.webkitgtk.org/
@@ -26,7 +26,7 @@ BuildRequires:  libatomic libicu-devel libjpeg-devel libnotify-devel
 BuildRequires:  libpng-devel libsecret-devel libsoup-devel libwebp-devel
 BuildRequires:  libxslt-devel libXt-devel libwayland-client-devel
 BuildRequires:  libwayland-egl-devel libwayland-server-devel openjpeg2-devel
-BuildRequires:  mesa-libEGL-devel mesa-libGL-devel mesa-libGLES-devel
+BuildRequires:  mesa-libEGL-devel mesa-libGL-devel libglvnd-devel
 BuildRequires:  pcre-devel perl-File-Copy-Recursive perl-JSON-PP perl-Switch
 BuildRequires:  python3 ruby rubygems sqlite-devel upower-devel woff2-devel
 Requires:       geoclue2 bubblewrap xdg-dbus-proxy  xdg-desktop-portal-gtk
@@ -175,6 +175,9 @@ done
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Wed Aug 05 2020 songnannan <songnannan2@huawei.com> - 2.28.3-2
+- change the mesa-libELGS-devel to libglvnd-devel
+
 * Thu Jul 23 2020 songnannan <songnannan2@huawei.com> - 2.28.3-1
 - Type:enhancement
 - Id:NA
