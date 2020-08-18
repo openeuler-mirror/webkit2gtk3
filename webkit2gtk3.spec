@@ -9,7 +9,7 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.22.2
-Release:        7
+Release:        8
 Summary:        GTK+ Web content engine library
 License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
 URL:            http://www.webkitgtk.org/
@@ -188,6 +188,9 @@ done
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Tue Aug 18 2020 smileknife<jackshan2010@aliyun.com> - 2.22.2-8
+- update release for rebuilding
+
 * Tue May 19 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.22.2-7
 - rebuild for libwebp
 
