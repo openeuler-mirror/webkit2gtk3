@@ -9,7 +9,7 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.22.2
-Release:        8
+Release:        9
 Summary:        GTK+ Web content engine library
 License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
 URL:            http://www.webkitgtk.org/
@@ -36,7 +36,7 @@ BuildRequires:  libatomic libicu-devel libjpeg-devel libnotify-devel
 BuildRequires:  libpng-devel libsecret-devel libsoup-devel libwebp-devel
 BuildRequires:  libxslt-devel libXt-devel libwayland-client-devel
 BuildRequires:  libwayland-egl-devel libwayland-server-devel
-BuildRequires:  mesa-libEGL-devel mesa-libGL-devel mesa-libGLES-devel
+BuildRequires:  mesa-libEGL-devel mesa-libGL-devel libglvnd-devel
 BuildRequires:  pcre-devel perl-File-Copy-Recursive perl-JSON-PP perl-Switch
 BuildRequires:  python2 ruby rubygems sqlite-devel upower-devel woff2-devel
 Requires:       geoclue2
@@ -188,6 +188,9 @@ done
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Tue Oct 13 2020 hanhui <hanhui15@huawei.com> - 2.22.2-9
+- change mesa-libEGL-devel to libglvnd-devel in buildrequires
+
 * Tue Aug 18 2020 smileknife<jackshan2010@aliyun.com> - 2.22.2-8
 - update release for rebuilding
 
