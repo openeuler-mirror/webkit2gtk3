@@ -9,9 +9,9 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.22.2
-Release:        9
+Release:        10
 Summary:        GTK+ Web content engine library
-License:        LGPLv2 AND BSD-3-Clause AND ICU AND MIT
+License:        LGPLv2
 URL:            http://www.webkitgtk.org/
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
@@ -188,6 +188,9 @@ done
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Tue Dec 15 2020 hanhui<hanhui15@huawei.com> - 2.22.2-10
+- modify license
+
 * Tue Oct 13 2020 hanhui <hanhui15@huawei.com> - 2.22.2-9
 - change mesa-libEGL-devel to libglvnd-devel in buildrequires
 
