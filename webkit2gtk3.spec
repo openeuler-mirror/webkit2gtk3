@@ -9,7 +9,7 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.22.2
-Release:        10
+Release:        11
 Summary:        GTK+ Web content engine library
 License:        LGPLv2
 URL:            http://www.webkitgtk.org/
@@ -24,7 +24,7 @@ Patch3:     python2.patch
 Patch4:     webkit-aarch64_page_size.patch
 
 #Dependency
-BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant-devel
+BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant2-devel
 BuildRequires:  flex fontconfig-devel freetype-devel ninja-build
 BuildRequires:  git geoclue2-devel gettext gcc-c++ glib2-devel gnutls-devel
 BuildRequires:  gobject-introspection-devel gperf
@@ -188,6 +188,9 @@ done
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Mon Jan 18 2021 jinzhimin<jinzhimin2@huawei.com> - 2.22.2-11
+- modify BuildRequires to enchant2-devel
+
 * Tue Dec 15 2020 hanhui<hanhui15@huawei.com> - 2.22.2-10
 - modify license
 
