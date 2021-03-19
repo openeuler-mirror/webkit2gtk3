@@ -5,13 +5,15 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.28.3
-Release:        3
+Release:        4
 Summary:        GTK+ Web content engine library
 License:        LGPLv2
 URL:            http://www.webkitgtk.org/
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
 Patch0:         user-agent-branding.patch
+
+Patch6000:      webkit-aarch64_page_size.patch
 
 #Dependency
 BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant2-devel
@@ -108,7 +110,12 @@ pushd %{_target_platform}
   -DCMAKE_BUILD_TYPE=Release \
   -DENABLE_GTKDOC=ON \
   -DENABLE_MINIBROWSER=ON \
+  -DUSE_WPE_RENDERER=OFF \
   -DPYTHON_EXECUTABLE=%{_bindir}/python3 \
+%ifarch aarch64
+  -DENABLE_JIT=OFF \
+  -DUSE_SYSTEM_MALLOC=ON \
+%endif
   ..
 popd
 
@@ -175,6 +182,9 @@ done
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Fri Mar 19 2021 Dehui Fan<fandehui1@huawei.com> - 2.28.3-4
+- DESC: fix webkit aarch64 page size
+
 * Tue Dec 15 2020 hanhui<hanhui15@huawei.com> - 2.28.3-3
 - modify license
 
