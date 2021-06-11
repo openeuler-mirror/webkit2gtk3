@@ -1,17 +1,22 @@
 %global __provides_exclude_from ^%{_libdir}/webkit2gtk-4\\.0/.*\\.so$
 %global _dwz_max_die_limit 250000000
 %global _dwz_max_die_limit_x86_64 250000000
+#build gtkdoc failed on x86_64
+%ifarch aarch64
+%bcond_without docs
+%endif
+
 
 #Basic Information
 Name:           webkit2gtk3
-Version:        2.28.3
-Release:        3
+Version:        2.32.1
+Release:        1
 Summary:        GTK+ Web content engine library
 License:        LGPLv2
 URL:            http://www.webkitgtk.org/
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
+Source1:        https://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz.asc
 
-Patch0:         user-agent-branding.patch
 
 #Dependency
 BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant2-devel
@@ -20,7 +25,7 @@ BuildRequires:  git geoclue2-devel gettext gcc-c++ glib2-devel gnutls-devel
 BuildRequires:  gobject-introspection-devel gperf gnupg2 wpebackend-fdo-devel
 BuildRequires:  gstreamer1-devel gstreamer1-plugins-base-devel rubygem-json
 BuildRequires:  gstreamer1-plugins-bad-free-devel libwpe-devel libseccomp-devel
-BuildRequires:  gtk2-devel gtk3-devel gtk-doc geoclue2-devel libjpeg-turbo-devel
+BuildRequires:  gtk3-devel gtk-doc geoclue2-devel libjpeg-turbo-devel
 BuildRequires:  harfbuzz-devel hyphen-devel bubblewrap xdg-dbus-proxy
 BuildRequires:  libatomic libicu-devel libjpeg-devel libnotify-devel
 BuildRequires:  libpng-devel libsecret-devel libsoup-devel libwebp-devel
@@ -28,11 +33,12 @@ BuildRequires:  libxslt-devel libXt-devel libwayland-client-devel
 BuildRequires:  libwayland-egl-devel libwayland-server-devel openjpeg2-devel
 BuildRequires:  mesa-libEGL-devel mesa-libGL-devel libglvnd-devel
 BuildRequires:  pcre-devel perl-File-Copy-Recursive perl-JSON-PP perl-Switch
-BuildRequires:  python3 ruby rubygems sqlite-devel upower-devel woff2-devel
+BuildRequires:  python3 ruby rubygems sqlite-devel upower-devel woff2-devel pkgconfig(libsystemd)
 Requires:       geoclue2 bubblewrap xdg-dbus-proxy  xdg-desktop-portal-gtk
 Requires:       webkit2gtk3-jsc = %{version}-%{release}
 
 Provides:       bundled(angle)
+Provides:       bundled(xdgmime)
 
 Obsoletes:      libwebkit2gtk < 2.5.0
 Provides:       libwebkit2gtk = %{version}-%{release}
@@ -61,6 +67,7 @@ Provides:       webkitgtk4-devel = %{version}-%{release}
 The webkit2gtk3-devel package contains libraries, build data, and header
 files for developing applications that use webkit2gtk3.
 
+%if %{with docs}
 %package        help
 Summary:        Documentation files for webkit2gtk3
 BuildArch:      noarch
@@ -72,6 +79,7 @@ Provides:       webkitgtk4-doc = %{version}-%{release}
 
 %description    help
 This package contains developer documentation for webkit2gtk3.
+%endif
 
 %package        jsc
 Summary:        JavaScript engine from webkit2gtk3
@@ -100,15 +108,31 @@ rm -rf Source/ThirdParty/gtest/
 rm -rf Source/ThirdParty/qunit/
 
 %build
+%global optflags %(echo %{optflags} -Wl,--no-keep-memory | sed 's/-g /-g1 /')
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
 %cmake \
   -GNinja \
   -DPORT=GTK \
   -DCMAKE_BUILD_TYPE=Release \
+%if %{with docs}
   -DENABLE_GTKDOC=ON \
+%endif
   -DENABLE_MINIBROWSER=ON \
   -DPYTHON_EXECUTABLE=%{_bindir}/python3 \
+  -DENABLE_GAMEPAD=OFF \
+  -DCMAKE_EXE_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,now -pthread" \
+  -DCMAKE_MODULE_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,now -pthread" \
+  -DCMAKE_SHARED_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,now -pthread" \
+%ifarch aarch64
+  -DENABLE_JIT=OFF \
+  -DUSE_SYSTEM_MALLOC=ON \
+%endif
+%if 0%{?openEuler}
+%ifarch aarch64
+  -DUSE_64KB_PAGE_BLOCK=ON \
+%endif
+%endif
   ..
 popd
 
@@ -167,14 +191,19 @@ done
 %dir %{_datadir}/gir-1.0
 %{_datadir}/gir-1.0/JavaScriptCore-4.0.gir
 
+%if %{with docs}
 %files help
 %dir %{_datadir}/gtk-doc
 %dir %{_datadir}/gtk-doc/html
 %{_datadir}/gtk-doc/html/jsc-glib-4.0/
 %{_datadir}/gtk-doc/html/webkit2gtk-4.0/
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
+%endif
 
 %changelog
+* Mon Jun 21 2021 wangkerong<wangkerong@huawei.com> - 2.32.1-1
+- upgrade to 2.32.1
+
 * Tue Dec 15 2020 hanhui<hanhui15@huawei.com> - 2.28.3-3
 - modify license
 
