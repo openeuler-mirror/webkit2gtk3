@@ -10,7 +10,7 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.32.1
-Release:        1
+Release:        2
 Summary:        GTK+ Web content engine library
 License:        LGPLv2
 URL:            http://www.webkitgtk.org/
@@ -34,8 +34,9 @@ BuildRequires:  libwayland-egl-devel libwayland-server-devel openjpeg2-devel
 BuildRequires:  mesa-libEGL-devel mesa-libGL-devel libglvnd-devel
 BuildRequires:  pcre-devel perl-File-Copy-Recursive perl-JSON-PP perl-Switch
 BuildRequires:  python3 ruby rubygems sqlite-devel upower-devel woff2-devel pkgconfig(libsystemd)
-Requires:       geoclue2 bubblewrap xdg-dbus-proxy  xdg-desktop-portal-gtk
+Requires:       geoclue2 bubblewrap xdg-dbus-proxy
 Requires:       webkit2gtk3-jsc = %{version}-%{release}
+Recommends:     xdg-desktop-portal-gtk
 
 Provides:       bundled(angle)
 Provides:       bundled(xdgmime)
@@ -201,6 +202,9 @@ done
 %endif
 
 %changelog
+* Thu Jul 29 2021 wangkerong<wangkerong@huawei.com> - 2.32.1-2
+- change xdg-desktop-protal-gts dependences
+
 * Mon Jun 21 2021 wangkerong<wangkerong@huawei.com> - 2.32.1-1
 - upgrade to 2.32.1
 
