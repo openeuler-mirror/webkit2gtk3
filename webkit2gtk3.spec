@@ -9,8 +9,8 @@
 
 #Basic Information
 Name:           webkit2gtk3
-Version:        2.32.1
-Release:        2
+Version:        2.32.4
+Release:        1
 Summary:        GTK+ Web content engine library
 License:        LGPLv2
 URL:            http://www.webkitgtk.org/
@@ -202,6 +202,9 @@ done
 %endif
 
 %changelog
+* Fri Oct 22 2021 zhanzhimin<zhanzhimin@huawei.com> - 2.32.4-1
+- upgrade to 2.32.4
+
 * Thu Jul 29 2021 wangkerong<wangkerong@huawei.com> - 2.32.1-2
 - change xdg-desktop-protal-gts dependences
 
