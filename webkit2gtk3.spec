@@ -10,13 +10,14 @@
 #Basic Information
 Name:           webkit2gtk3
 Version:        2.32.4
-Release:        1
+Release:        2
 Summary:        GTK+ Web content engine library
 License:        LGPLv2
 URL:            http://www.webkitgtk.org/
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 Source1:        https://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz.asc
 
+Patch6000:	backport-CVE-2021-42762.patch
 
 #Dependency
 BuildRequires:  at-spi2-core-devel bison cairo-devel cmake enchant2-devel
@@ -202,6 +203,9 @@ done
 %endif
 
 %changelog
+* Thu Nov 04 2021 liuyumeng<liuyumeng5@huawei.com> - 2.32.4-2
+- fix CVE-2021-42762
+
 * Fri Oct 22 2021 zhanzhimin<zhanzhimin@huawei.com> - 2.32.4-1
 - upgrade to 2.32.4
 
